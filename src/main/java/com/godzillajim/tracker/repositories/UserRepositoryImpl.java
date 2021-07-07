@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import org.mindrot.jbcrypt.BCrypt;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository{
@@ -23,6 +24,7 @@ public class UserRepositoryImpl implements UserRepository{
     JdbcTemplate jdbcTemplate;
     @Override
     public Integer create(String firstName, String lastName, String email, String password) throws TrackerAuthException {
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
         try{
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(connection -> {
@@ -30,7 +32,7 @@ public class UserRepositoryImpl implements UserRepository{
                 ps.setString(1,firstName);
                 ps.setString(2,lastName);
                 ps.setString(3,email);
-                ps.setString(4,password);
+                ps.setString(4,hashedPassword);
                 return ps;
             }, keyHolder);
             return (Integer) keyHolder.getKeys().get("user_id");
@@ -43,7 +45,7 @@ public class UserRepositoryImpl implements UserRepository{
     public User findByEmailAndPassword(String email, String password) throws TrackerAuthException {
         try{
             User user = jdbcTemplate.queryForObject(SQL_FIND_BY_EMAIL, new Object[]{email}, userRowMapper);
-            if(!password.equals(user.getPassword()))
+            if(!BCrypt.checkpw(password, user.getPassword()))
                 throw new TrackerAuthException("Invalid email or password");
             return user;
         }catch(Exception e){
