@@ -23,7 +23,7 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public User registerUser(String firstName, String lastName, String email, String password) throws TrackerAuthException {
+    public User registerUser(String firstName, String lastName, String email, String password, String image) throws TrackerAuthException {
         Pattern pattern = Pattern.compile("^(.+)@(.+)$");
         if(email != null) email = email.toLowerCase();
         if(!pattern.matcher(email).matches())
@@ -31,7 +31,20 @@ public class UserServiceImp implements UserService{
         Integer count = userRepository.getCountByEmail(email);
         if(count > 0)
             throw new TrackerAuthException("Email already in use");
-        Integer userId = userRepository.create(firstName,lastName,email,password);
+        Integer userId = userRepository.create(firstName,lastName,email,password,image);
         return userRepository.findById(userId);
     }
+
+    @Override
+    public String getImage(Integer userId) throws TrackerAuthException {
+        User user = userRepository.findById(userId);
+        return user.getImage();
+    }
+
+    @Override
+    public User getProfile(Integer userId) {
+        return userRepository.findById(userId);
+    }
+
+
 }

@@ -15,15 +15,15 @@ import org.mindrot.jbcrypt.BCrypt;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository{
-    private static final String SQL_CREATE = "INSERT INTO track_users(user_id, first_name, last_name, email, password) VALUES(NEXTVAL('track_users_seq'), ?,?,?,?)";
+    private static final String SQL_CREATE = "INSERT INTO track_users(user_id, first_name, last_name, email, password,image) VALUES(NEXTVAL('track_users_seq'), ?,?,?,?,?)";
     private static final String SQL_COUNT_BY_EMAIL = "SELECT COUNT(*) FROM track_users WHERE email = ?";
-    private static final String SQL_FIND_BY_ID = "SELECT user_id, first_name, last_name, email, password FROM track_users WHERE user_id = ?";
+    private static final String SQL_FIND_BY_ID = "SELECT user_id, first_name, last_name, email, password, image FROM track_users WHERE user_id = ?";
     private static final String SQL_FIND_BY_EMAIL = "SELECT * FROM track_users WHERE email = ?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
     @Override
-    public Integer create(String firstName, String lastName, String email, String password) throws TrackerAuthException {
+    public Integer create(String firstName, String lastName, String email, String password, String image) throws TrackerAuthException {
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
         try{
             KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -33,6 +33,7 @@ public class UserRepositoryImpl implements UserRepository{
                 ps.setString(2,lastName);
                 ps.setString(3,email);
                 ps.setString(4,hashedPassword);
+                ps.setString(5, image);
                 return ps;
             }, keyHolder);
             return (Integer) keyHolder.getKeys().get("user_id");
@@ -67,6 +68,7 @@ public class UserRepositoryImpl implements UserRepository{
                rs.getString("first_name"),
                rs.getString("last_name"),
                rs.getString("email"),
-               rs.getString("password"));
+               rs.getString("password"),
+               rs.getString("image"));
     });
 }

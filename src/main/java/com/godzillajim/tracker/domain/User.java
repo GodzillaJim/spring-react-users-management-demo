@@ -6,9 +6,18 @@ public class User {
     private String lastName;
     private String email;
     private String password;
+    private String image = "/default-image.png";
 
     public Integer getUserId() {
         return userId;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public void setUserId(Integer userId) {
@@ -47,12 +56,13 @@ public class User {
         this.password = password;
     }
 
-    public User(Integer userId, String firstName, String lastName, String email, String password) {
+    public User(Integer userId, String firstName, String lastName, String email, String password, String image) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.image = image;
     }
 
 }
