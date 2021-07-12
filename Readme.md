@@ -2,6 +2,8 @@
 
 This app is a simple imaginary tracker app to demonstrate user registration using Spring Boot and a React frontend.<br>
 
+The frontend code repo is <a href="https://github.com/GodzillaJim/tracker-frontend.git">here</a>
+
 PostgreSQL is used and the SQL dump is named <code>tracker.sql</code> at the root of the project.
 
 The frontend code is in the <code>/tracker-frontend</code> folder. The frontend uses React/Redux for three pages, <code>/</code> for login, <code>/register</code> and <code>/profile</code> for authenticated users. I used React Bootstrap for the UI components.
