@@ -1,6 +1,5 @@
 package com.godzillajim.tracker.services;
 
-import com.godzillajim.tracker.exceptions.TrackerAuthException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -10,11 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.OutputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.Date;
 
 @Service
@@ -30,7 +26,7 @@ public class FileStorageService {
 
         String filename = new Date().toString().replaceAll(":","-").replaceAll(" ", "")+StringUtils.cleanPath(file.getOriginalFilename());
         try{
-            File file1 = new File(fileStorageLocation + filename);
+            File file1 = new File("target/classes/static/" + filename);
             if(!file1.exists()){
                 file1.createNewFile();
             }

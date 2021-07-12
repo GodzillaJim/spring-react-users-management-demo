@@ -5,13 +5,12 @@ import com.godzillajim.tracker.domain.User;
 import com.godzillajim.tracker.exceptions.TrackerAuthException;
 import com.godzillajim.tracker.services.FileStorageService;
 import com.godzillajim.tracker.services.UserService;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import io.jsonwebtoken.Jwts;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = {"http://localhost:3000"})
 @RequestMapping("/api/users")
 public class UserResource {
 
@@ -47,17 +47,17 @@ public class UserResource {
         User user = userService.registerUser(firstName, lastName, email, password, image);
         return new ResponseEntity<>(generateJWTToken(user), HttpStatus.OK);
     }
-    @PostMapping("/profile")
+    @GetMapping("/profile")
     public User getProfile(HttpServletRequest request){
         int userId = (Integer) request.getAttribute("userId");
         return userService.getProfile(userId);
     }
     @PostMapping("/file")
     public String uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
-        if(file == null){
-            throw new TrackerAuthException("Please provide file");
-        }
         try{
+            if(file == null){
+                throw new TrackerAuthException("Please provide file");
+            }
             return fileStorageService.storeFile(file);
         }catch (Exception e){
             System.out.println(e);

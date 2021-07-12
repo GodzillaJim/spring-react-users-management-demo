@@ -12,7 +12,7 @@ create table track_users(
     last_name varchar(20) not null,
     email varchar(30) not null,
     password text not null,
-    image varchar(20) not null
+    image text not null
 );
 create table track_categories(
     category_id integer primary key not null,

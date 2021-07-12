@@ -2,6 +2,7 @@ package com.godzillajim.tracker.repositories;
 
 import com.godzillajim.tracker.domain.User;
 import com.godzillajim.tracker.exceptions.TrackerAuthException;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import org.mindrot.jbcrypt.BCrypt;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository{
@@ -38,7 +38,8 @@ public class UserRepositoryImpl implements UserRepository{
             }, keyHolder);
             return (Integer) keyHolder.getKeys().get("user_id");
         }catch(Exception e){
-            throw new TrackerAuthException("Invalid details, failed to ccreate");
+            System.out.println(e.getCause());
+            throw new TrackerAuthException("Invalid details, failed to create account.");
         }
     }
 
